@@ -91,14 +91,22 @@ class _ComicImageState extends State<ComicImage> with WidgetsBindingObserver {
   bool get _cropImageToFillScreen {
     try {
       final reader = context.reader;
-      return appdata.settings.getReaderSetting(
+      bool isEnabled = appdata.settings.getReaderSetting(
             reader.cid,
             reader.type.sourceKey,
             'cropImageToFillScreen',
           ) ==
           true;
+      if (!isEnabled) return false;
+      bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+      bool isHorizontalGallery = reader.mode == ReaderMode.galleryLeftToRight || 
+                                 reader.mode == ReaderMode.galleryRightToLeft;
+      return isPortrait && isHorizontalGallery;
     } catch (_) {
-      return appdata.settings['cropImageToFillScreen'] == true;
+      bool isEnabled = appdata.settings['cropImageToFillScreen'] == true;
+      if (!isEnabled) return false;
+      bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+      return isPortrait;
     }
   }
 

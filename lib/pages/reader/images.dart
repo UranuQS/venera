@@ -357,14 +357,14 @@ class _GalleryModeState extends State<_GalleryMode>
                   context,
                   startIndex + 1,
                 ),
-                initialScale: cropImageToFillScreen
+                initialScale: getCropImageToFillScreen(context)
                     ? PhotoViewComputedScale.covered
                     : PhotoViewComputedScale.contained,
-                minScale: cropImageToFillScreen
+                minScale: getCropImageToFillScreen(context)
                     ? PhotoViewComputedScale.covered
                     : PhotoViewComputedScale.contained * 1.0,
                 maxScale: PhotoViewComputedScale.covered * 10.0,
-                fit: cropImageToFillScreen ? BoxFit.cover : BoxFit.contain,
+                fit: getCropImageToFillScreen(context) ? BoxFit.cover : BoxFit.contain,
                 errorBuilder: (_, error, s, retry) {
                   return NetworkError(message: error.toString(), retry: retry);
                 },
@@ -375,10 +375,10 @@ class _GalleryModeState extends State<_GalleryMode>
             return PhotoViewGalleryPageOptions.customChild(
               childSize: viewportSize,
               controller: photoViewControllers[index],
-              initialScale: cropImageToFillScreen
+              initialScale: getCropImageToFillScreen(context)
                   ? PhotoViewComputedScale.covered
                   : PhotoViewComputedScale.contained,
-              minScale: cropImageToFillScreen
+              minScale: getCropImageToFillScreen(context)
                   ? PhotoViewComputedScale.covered
                   : PhotoViewComputedScale.contained * 1.0,
               maxScale: PhotoViewComputedScale.covered * 10.0,
@@ -462,7 +462,7 @@ class _GalleryModeState extends State<_GalleryMode>
               context,
               startIndex + 1,
             ),
-            fit: cropImageToFillScreen ? BoxFit.cover : BoxFit.contain,
+            fit: getCropImageToFillScreen(context) ? BoxFit.cover : BoxFit.contain,
             alignment: axis == Axis.vertical
                 ? Alignment.bottomCenter
                 : Alignment.centerRight,
@@ -479,7 +479,7 @@ class _GalleryModeState extends State<_GalleryMode>
               context,
               startIndex + 2,
             ),
-            fit: cropImageToFillScreen ? BoxFit.cover : BoxFit.contain,
+            fit: getCropImageToFillScreen(context) ? BoxFit.cover : BoxFit.contain,
             alignment: axis == Axis.vertical
                 ? Alignment.topCenter
                 : Alignment.centerLeft,
@@ -499,7 +499,7 @@ class _GalleryModeState extends State<_GalleryMode>
         return Expanded(
           child: ComicImage(
             image: imageProvider,
-            fit: cropImageToFillScreen ? BoxFit.cover : BoxFit.contain,
+            fit: getCropImageToFillScreen(context) ? BoxFit.cover : BoxFit.contain,
             onInit: (state) => imageStates.add(state),
             onDispose: (state) => imageStates.remove(state),
           ),
@@ -919,7 +919,7 @@ class _ContinuousModeState extends State<_ContinuousMode>
             image: image,
             width: width,
             height: height,
-            fit: cropImageToFillScreen ? BoxFit.cover : BoxFit.contain,
+            fit: getCropImageToFillScreen(context) ? BoxFit.cover : BoxFit.contain,
             onInit: (state) => imageStates.add(state),
             onDispose: (state) => imageStates.remove(state),
           ),
