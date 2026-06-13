@@ -182,7 +182,7 @@ class _GalleryModeState extends State<_GalleryMode>
     bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     bool isHorizontalGallery = reader.mode == ReaderMode.galleryLeftToRight || 
                                reader.mode == ReaderMode.galleryRightToLeft;
-    return isPortrait && isHorizontalGallery;
+    return isPortrait && isHorizontalGallery && reader.imagesPerPage == 1;
   }
 
   bool get showChapterCommentsAtEnd {
@@ -829,7 +829,7 @@ class _ContinuousModeState extends State<_ContinuousMode>
     bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     bool isHorizontalGallery = reader.mode == ReaderMode.galleryLeftToRight || 
                                reader.mode == ReaderMode.galleryRightToLeft;
-    return isPortrait && isHorizontalGallery;
+    return isPortrait && isHorizontalGallery && reader.imagesPerPage == 1;
   }
 
   void onPointerSignal(PointerSignalEvent event) {
