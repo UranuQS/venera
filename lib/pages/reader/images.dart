@@ -366,11 +366,9 @@ class _GalleryModeState extends State<_GalleryMode>
                 initialScale: getCropImageToFillScreen(context)
                     ? PhotoViewComputedScale.covered
                     : PhotoViewComputedScale.contained,
-                minScale: getCropImageToFillScreen(context)
-                    ? PhotoViewComputedScale.covered
-                    : PhotoViewComputedScale.contained * 1.0,
+                minScale: PhotoViewComputedScale.contained * 1.0,
                 maxScale: PhotoViewComputedScale.covered * 10.0,
-                fit: getCropImageToFillScreen(context) ? BoxFit.cover : BoxFit.contain,
+                fit: BoxFit.contain,
                 errorBuilder: (_, error, s, retry) {
                   return NetworkError(message: error.toString(), retry: retry);
                 },
@@ -384,9 +382,7 @@ class _GalleryModeState extends State<_GalleryMode>
               initialScale: getCropImageToFillScreen(context)
                   ? PhotoViewComputedScale.covered
                   : PhotoViewComputedScale.contained,
-              minScale: getCropImageToFillScreen(context)
-                  ? PhotoViewComputedScale.covered
-                  : PhotoViewComputedScale.contained * 1.0,
+              minScale: PhotoViewComputedScale.contained * 1.0,
               maxScale: PhotoViewComputedScale.covered * 10.0,
               child: buildPageImages(pageImages, startIndex),
             );
