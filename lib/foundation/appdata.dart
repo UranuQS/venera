@@ -224,6 +224,7 @@ class Settings with ChangeNotifier {
     'comicListDisplayMode': 'paging', // paging, continuous
     'showPageNumberInReader': true,
     'showSingleImageOnFirstPage': false,
+    'cropImageToFillScreen': false,
     'enableDoubleTapToZoom': true,
     'reverseChapterOrder': false,
     'showSystemStatusBar': false,

@@ -88,6 +88,28 @@ class _ComicImageState extends State<ComicImage> with WidgetsBindingObserver {
 
   static clear() => _cache.clear();
 
+  bool get _cropImageToFillScreen {
+    try {
+      final reader = context.reader;
+      return appdata.settings.getReaderSetting(
+            reader.cid,
+            reader.type.sourceKey,
+            'cropImageToFillScreen',
+          ) ==
+          true;
+    } catch (_) {
+      return appdata.settings['cropImageToFillScreen'] == true;
+    }
+  }
+
+  Size get _readerSize {
+    try {
+      return context.reader.size;
+    } catch (_) {
+      return MediaQuery.sizeOf(context);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -338,6 +360,17 @@ class _ComicImageState extends State<ComicImage> with WidgetsBindingObserver {
     return LayoutBuilder(builder: (context, constrains) {
       var width = widget.width;
       var height = widget.height;
+      final cropImageToFillScreen = _cropImageToFillScreen;
+
+      if (cropImageToFillScreen) {
+        final readerSize = _readerSize;
+        if (width == null || width == double.infinity) {
+          width = constrains.hasBoundedWidth ? constrains.maxWidth : readerSize.width;
+        }
+        if (height == null || height == double.infinity) {
+          height = constrains.hasBoundedHeight ? constrains.maxHeight : readerSize.height;
+        }
+      }
 
       if (_imageInfo != null) {
         // Record the height and the width of the image
@@ -346,7 +379,7 @@ class _ComicImageState extends State<ComicImage> with WidgetsBindingObserver {
       }
 
       Size? cacheSize = _cache[widget.image.hashCode];
-      if (cacheSize != null) {
+      if (!cropImageToFillScreen && cacheSize != null) {
         if (width == double.infinity) {
           width = constrains.maxWidth;
           height = width * cacheSize.height / cacheSize.width;
@@ -354,7 +387,7 @@ class _ComicImageState extends State<ComicImage> with WidgetsBindingObserver {
           height = constrains.maxHeight;
           width = height * cacheSize.width / cacheSize.height;
         }
-      } else {
+      } else if (!cropImageToFillScreen) {
         if (width == double.infinity) {
           width = constrains.maxWidth;
           height = 300;
@@ -379,7 +412,7 @@ class _ComicImageState extends State<ComicImage> with WidgetsBindingObserver {
           color: widget.color,
           opacity: widget.opacity,
           colorBlendMode: widget.colorBlendMode,
-          fit: widget.fit,
+          fit: cropImageToFillScreen ? BoxFit.cover : widget.fit,
           alignment: widget.alignment,
           repeat: widget.repeat,
           centerSlice: widget.centerSlice,

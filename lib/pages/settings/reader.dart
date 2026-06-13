@@ -337,6 +337,17 @@ class _ReaderSettingsState extends State<ReaderSettings> {
           ),
         ),
         _SwitchSetting(
+          title: 'Crop image to fill screen'.tl,
+          subtitle: 'Scale the image to occupy the entire screen'.tl,
+          settingKey: 'cropImageToFillScreen',
+          onChanged: () {
+            widget.onChanged?.call('cropImageToFillScreen');
+          },
+          comicId: isEnabledSpecificSettings ? widget.comicId : null,
+          comicSource: isEnabledSpecificSettings ? widget.comicSource : null,
+          useDeviceSettings: useDeviceSpecificSettings,
+        ).toSliver(),
+        _SwitchSetting(
           title: 'Limit image width'.tl,
           subtitle: 'When using Continuous(Top to Bottom) mode'.tl,
           settingKey: 'limitImageWidth',
