@@ -462,7 +462,7 @@ class _GalleryModeState extends State<_GalleryMode>
               context,
               startIndex + 1,
             ),
-            fit: BoxFit.contain,
+            fit: cropImageToFillScreen ? BoxFit.cover : BoxFit.contain,
             alignment: axis == Axis.vertical
                 ? Alignment.bottomCenter
                 : Alignment.centerRight,
@@ -479,7 +479,7 @@ class _GalleryModeState extends State<_GalleryMode>
               context,
               startIndex + 2,
             ),
-            fit: BoxFit.contain,
+            fit: cropImageToFillScreen ? BoxFit.cover : BoxFit.contain,
             alignment: axis == Axis.vertical
                 ? Alignment.topCenter
                 : Alignment.centerLeft,
@@ -499,7 +499,7 @@ class _GalleryModeState extends State<_GalleryMode>
         return Expanded(
           child: ComicImage(
             image: imageProvider,
-            fit: BoxFit.contain,
+            fit: cropImageToFillScreen ? BoxFit.cover : BoxFit.contain,
             onInit: (state) => imageStates.add(state),
             onDispose: (state) => imageStates.remove(state),
           ),
@@ -809,6 +809,17 @@ class _ContinuousModeState extends State<_ContinuousMode>
         });
   }
 
+  bool get cropImageToFillScreen {
+    if (appdata.settings.isComicSpecificSettingsEnabled(
+        reader.cid, reader.type.sourceKey)) {
+      return appdata.settings.getReaderSetting(
+              reader.cid, reader.type.sourceKey, 'cropImageToFillScreen') ==
+          true;
+    } else {
+      return appdata.settings['cropImageToFillScreen'] == true;
+    }
+  }
+
   void onPointerSignal(PointerSignalEvent event) {
     if (event is PointerScrollEvent) {
       if (!_isMouseScrolling) {
@@ -908,7 +919,7 @@ class _ContinuousModeState extends State<_ContinuousMode>
             image: image,
             width: width,
             height: height,
-            fit: BoxFit.contain,
+            fit: cropImageToFillScreen ? BoxFit.cover : BoxFit.contain,
             onInit: (state) => imageStates.add(state),
             onDispose: (state) => imageStates.remove(state),
           ),
