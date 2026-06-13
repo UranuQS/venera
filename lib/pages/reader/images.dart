@@ -168,15 +168,21 @@ class _GalleryModeState extends State<_GalleryMode>
 
   late _ReaderState reader;
 
-  bool get cropImageToFillScreen {
+  bool getCropImageToFillScreen(BuildContext context) {
+    bool isEnabled = false;
     if (appdata.settings.isComicSpecificSettingsEnabled(
         reader.cid, reader.type.sourceKey)) {
-      return appdata.settings.getReaderSetting(
+      isEnabled = appdata.settings.getReaderSetting(
               reader.cid, reader.type.sourceKey, 'cropImageToFillScreen') ==
           true;
     } else {
-      return appdata.settings['cropImageToFillScreen'] == true;
+      isEnabled = appdata.settings['cropImageToFillScreen'] == true;
     }
+    if (!isEnabled) return false;
+    bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    bool isHorizontalGallery = reader.mode == ReaderMode.galleryLeftToRight || 
+                               reader.mode == ReaderMode.galleryRightToLeft;
+    return isPortrait && isHorizontalGallery;
   }
 
   bool get showChapterCommentsAtEnd {
@@ -809,15 +815,21 @@ class _ContinuousModeState extends State<_ContinuousMode>
         });
   }
 
-  bool get cropImageToFillScreen {
+  bool getCropImageToFillScreen(BuildContext context) {
+    bool isEnabled = false;
     if (appdata.settings.isComicSpecificSettingsEnabled(
         reader.cid, reader.type.sourceKey)) {
-      return appdata.settings.getReaderSetting(
+      isEnabled = appdata.settings.getReaderSetting(
               reader.cid, reader.type.sourceKey, 'cropImageToFillScreen') ==
           true;
     } else {
-      return appdata.settings['cropImageToFillScreen'] == true;
+      isEnabled = appdata.settings['cropImageToFillScreen'] == true;
     }
+    if (!isEnabled) return false;
+    bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    bool isHorizontalGallery = reader.mode == ReaderMode.galleryLeftToRight || 
+                               reader.mode == ReaderMode.galleryRightToLeft;
+    return isPortrait && isHorizontalGallery;
   }
 
   void onPointerSignal(PointerSignalEvent event) {
