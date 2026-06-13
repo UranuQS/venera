@@ -132,9 +132,16 @@ class _ReaderImagesState extends State<_ReaderImages> {
               'showChapterCommentsAtEnd',
             ) ==
             true;
+        var cropImageToFillScreen =
+            appdata.settings.getReaderSetting(
+              reader.cid,
+              reader.type.sourceKey,
+              'cropImageToFillScreen',
+            ) ==
+            true;
         return _GalleryMode(
           key: Key(
-            '${reader.mode.key}_${reader.imagesPerPage}_${showComments}_$showCommentsAtEnd',
+            '${reader.mode.key}_${reader.imagesPerPage}_${showComments}_${showCommentsAtEnd}_$cropImageToFillScreen',
           ),
         );
       } else {
@@ -160,6 +167,17 @@ class _GalleryModeState extends State<_GalleryMode>
   var photoViewControllers = <int, PhotoViewController>{};
 
   late _ReaderState reader;
+
+  bool get cropImageToFillScreen {
+    if (appdata.settings.isComicSpecificSettingsEnabled(
+        reader.cid, reader.type.sourceKey)) {
+      return appdata.settings.getReaderSetting(
+              reader.cid, reader.type.sourceKey, 'cropImageToFillScreen') ==
+          true;
+    } else {
+      return appdata.settings['cropImageToFillScreen'] == true;
+    }
+  }
 
   bool get showChapterCommentsAtEnd {
     if (reader.mode != ReaderMode.galleryLeftToRight &&
@@ -339,7 +357,14 @@ class _GalleryModeState extends State<_GalleryMode>
                   context,
                   startIndex + 1,
                 ),
-                fit: BoxFit.contain,
+                initialScale: cropImageToFillScreen
+                    ? PhotoViewComputedScale.covered
+                    : PhotoViewComputedScale.contained,
+                minScale: cropImageToFillScreen
+                    ? PhotoViewComputedScale.covered
+                    : PhotoViewComputedScale.contained * 1.0,
+                maxScale: PhotoViewComputedScale.covered * 10.0,
+                fit: cropImageToFillScreen ? BoxFit.cover : BoxFit.contain,
                 errorBuilder: (_, error, s, retry) {
                   return NetworkError(message: error.toString(), retry: retry);
                 },
@@ -350,7 +375,12 @@ class _GalleryModeState extends State<_GalleryMode>
             return PhotoViewGalleryPageOptions.customChild(
               childSize: viewportSize,
               controller: photoViewControllers[index],
-              minScale: PhotoViewComputedScale.contained * 1.0,
+              initialScale: cropImageToFillScreen
+                  ? PhotoViewComputedScale.covered
+                  : PhotoViewComputedScale.contained,
+              minScale: cropImageToFillScreen
+                  ? PhotoViewComputedScale.covered
+                  : PhotoViewComputedScale.contained * 1.0,
               maxScale: PhotoViewComputedScale.covered * 10.0,
               child: buildPageImages(pageImages, startIndex),
             );
